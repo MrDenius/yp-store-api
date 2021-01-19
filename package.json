@@ -12,7 +12,7 @@
 	"devDependencies": {},
 	"scripts": {
 		"start": "node app.js",
-		"push": "git add . && git commit -m \"push\" && git push heroku master",
+		"push": "git add . && git commit -am \"push\" && git push heroku master",
 		"logs": "heroku logs --app=yp-store-api -t",
 		"on": "heroku ps:scale web=1 --app=yp-store-api",
 		"off": "heroku ps:scale web=0 --app=yp-store-api"
