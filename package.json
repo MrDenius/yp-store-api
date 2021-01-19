@@ -1,0 +1,31 @@
+{
+	"dependencies": {
+		"express": "^4.17.1",
+		"express-graphql": "^0.12.0",
+		"graphql": "^15.4.0",
+		"mongoose": "^5.11.12"
+	},
+	"name": "yp-store-api",
+	"description": "",
+	"version": "1.0.0",
+	"main": "app.js",
+	"devDependencies": {},
+	"scripts": {
+		"start": "node app.js",
+		"push": "git add . && git commit -am \"push\" && git push heroku master",
+		"logs": "heroku logs --app=yp-store-api -t",
+		"on": "heroku ps:scale web=1 --app=yp-store-api",
+		"off": "heroku ps:scale web=0 --app=yp-store-api"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/MrDenius/yp-store-api.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/MrDenius/yp-store-api/issues"
+	},
+	"homepage": "https://github.com/MrDenius/yp-store-api#readme"
+}
