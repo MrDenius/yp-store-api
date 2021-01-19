@@ -32,6 +32,9 @@ const PositionType = new GraphQLObjectType({
 		price: {
 			type: GraphQLFloat,
 		},
+		img: {
+			type: GraphQLString,
+		},
 	}),
 });
 
@@ -89,6 +92,9 @@ const Mutation = new GraphQLObjectType({
 				price: {
 					type: new GraphQLNonNull(GraphQLFloat),
 				},
+				img: {
+					type: new GraphQLNonNull(GraphQLString),
+				},
 			},
 			resolve(parent, args) {
 				const position = new Position({
@@ -96,7 +102,11 @@ const Mutation = new GraphQLObjectType({
 					name: args.name,
 					description: args.description,
 					price: args.price,
+					img: args.img,
 				});
+				if (!position.img)
+					position.ipg = "https://i.imgur.com/h0AKNkW.png";
+
 				return position.save();
 			},
 		},

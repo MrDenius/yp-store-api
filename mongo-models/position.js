@@ -6,6 +6,7 @@ const positionSchema = new Schema({
 	name: String,
 	description: String,
 	price: Number,
+	img: String,
 });
 
 module.exports = mongo.model("Position", positionSchema);
