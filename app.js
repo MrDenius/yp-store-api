@@ -1,10 +1,18 @@
+global.debug = process.env.debug || false;
+
+const port = process.env.PORT || 4000;
+
+if (global.debug) {
+	global.address = `http://localhost:${port}/`;
+} else {
+	global.address = `https://yp-store-api.herokuapp.com/`;
+}
+
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 
 const schema = require("./schema/schema");
 const db = require("./db");
-
-const port = process.env.PORT || 4000;
 
 const app = express();
 const mongo = db();
@@ -18,10 +26,13 @@ app.use(
 	})
 );
 
+//app.use("/views/", view.static);
+//console.log(view.static);
+
 app.use("/views/", express.static(__dirname + "/views/"));
 
-app.get("/", (req, res) => {
-	res.redirect(view(req.query));
+app.get("/", async (req, res) => {
+	res.redirect(await view(req.query));
 });
 
 const server = app.listen(port, () => {

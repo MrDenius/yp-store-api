@@ -93,7 +93,7 @@ const Mutation = new GraphQLObjectType({
 					type: new GraphQLNonNull(GraphQLFloat),
 				},
 				img: {
-					type: new GraphQLNonNull(GraphQLString),
+					type: GraphQLString,
 				},
 			},
 			resolve(parent, args) {
@@ -105,7 +105,7 @@ const Mutation = new GraphQLObjectType({
 					img: args.img,
 				});
 				if (!position.img)
-					position.ipg = "https://i.imgur.com/h0AKNkW.png";
+					position.img = "https://i.imgur.com/h0AKNkW.png";
 
 				return position.save();
 			},
