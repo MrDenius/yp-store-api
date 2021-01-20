@@ -49,6 +49,10 @@ const Small = async () => {
 	content.price = document.querySelector("span#price");
 	content.img = document.querySelector("#img");
 
+	// content.addEventListener("click", () => {
+	// 	location.href = location.href.replace(/small/g, "full");
+	// });
+
 	content.description = "disable";
 };
 

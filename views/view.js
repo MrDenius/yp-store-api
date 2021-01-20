@@ -5,19 +5,23 @@ const init = (port) => {
 	const express = require("express");
 
 	const api = async (params) => {
+		_position = undefined;
+		_positionsByType = undefined;
+
 		console.log(params);
 		const quest = params.q;
 		const item = params.i;
 		const id = params.id || "60069cf1f8c79a3fb07d8094";
 		params.q = undefined;
-		params.id = undefined;
+		params.id = id;
 		params.i = undefined;
 		let qu = "";
 		Object.entries(params).forEach((p) => {
 			qu += `${p[0]}=`;
 			if (p[1]) qu += p[1];
 			qu += "&";
-		}); //http://localhost:4000/?q=position&i=name
+		}); //http://localhost:4000/?q=position&i=name //http://localhost:4000/?q=catalog&type=dog-fod
+		//http://localhost:4000/?q=position&i=full&id=600834e92c601024fca59e3f
 
 		switch (item) {
 			case "name":
@@ -40,17 +44,13 @@ const init = (port) => {
 				});
 				break;
 		}
+		console.log(qu);
 		if (quest === "position") {
-			{
-				return `views/Position/?${qu}`;
-			}
+			return `views/Position/?${qu}`;
 		}
 		if (quest === "catalog") {
+			return `views/Catalog/?${qu}`;
 		}
-	};
-
-	const AddPosition = (pos) => {
-		const frame = document.createElement("iframe");
 	};
 
 	let _position;

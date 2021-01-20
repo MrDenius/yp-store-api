@@ -1,0 +1,15 @@
+body {
+	margin: 0;
+}
+
+#content {
+	position: flex;
+	flex-wrap: wrap;
+}
+
+#frame {
+	border: 0;
+	width: 300px;
+	height: 450px;
+	margin: 5;
+}

@@ -1,4 +1,8 @@
-global.debug = process.env.debug || false;
+global.debug = false;
+if (process.env.NODE_ENV === "development") {
+	global.debug = true;
+	console.log("=====Development mode=====");
+}
 
 const port = process.env.PORT || 4000;
 
