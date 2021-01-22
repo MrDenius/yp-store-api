@@ -12,6 +12,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\app.js",
+            "args": ["--debug"],
             "env": {
                 "NODE_ENV": "development",
             },

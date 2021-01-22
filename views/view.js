@@ -51,6 +51,9 @@ const init = (port) => {
 		if (quest === "catalog") {
 			return `views/Catalog/?${qu}`;
 		}
+		if (quest === "admin") {
+			return `views/Admin/?${qu}`;
+		}
 	};
 
 	let _position;

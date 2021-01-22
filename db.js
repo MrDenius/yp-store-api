@@ -1,4 +1,4 @@
-const init = () => {
+const init = (callback) => {
 	const mongo = require("mongoose");
 	mongo.connect(
 		"mongodb+srv://server:nvUubzRUz5VQO2Lf@cluster0.cutzl.mongodb.net/yp-store-vault?retryWrites=true&w=majority",
@@ -7,9 +7,9 @@ const init = () => {
 			useUnifiedTopology: true,
 		}
 	);
-	mongo.connection.once("open", () => {
-		console.log("connected to mongodb");
-	});
+	mongo.connection.once("open", callback);
+
+	return mongo;
 };
 
 module.exports = init;
