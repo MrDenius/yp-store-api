@@ -17,17 +17,20 @@ if (global.debug) {
 let _progress = 0;
 const INIT_STEPS = 2;
 const InitingProgress = (mes) => {
-	//cli.spinner(`[${_progress}/${INIT_STEPS}] Starting...`, true);
 	_progress += 1;
 	cli.info(`[${_progress}/${INIT_STEPS}] ${mes}`);
 	if (_progress === INIT_STEPS) {
 		cli.ok(`Init finished successfully!`);
-		cli.info(`Started on ${global.address}`);
-		//cli.spinner("Starting sucessful!", true);
+		cli.ok(`Started on ${global.address}`);
 	}
 };
 cli.info("Start initing started!");
-//cli.spinner("Starting...");
+
+global.secret = require("crypto")
+	.createHash("sha256")
+	.update(Math.random().toString())
+	.digest("hex");
+cli.debug(`SECRET: ${global.secret}`);
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -43,6 +46,7 @@ const mongo = db(() => {
 const view = require("./views/view")(port);
 const login = require("./login")();
 const addPosition = require("./addPosition")();
+const pay = require("./pay")(global.secret);
 
 app.use(
 	"/graphql",
@@ -61,6 +65,8 @@ app.use("/views/", express.static(__dirname + "/views/"));
 app.get("/", async (req, res) => {
 	res.redirect(await view(req.query));
 });
+
+app.get("/pay", pay);
 
 app.post("/login", (req, res) => {
 	if (login(req.body) === "sucess") {
