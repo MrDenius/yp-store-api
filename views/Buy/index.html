@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Document</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div id="content">
+			<div id="top-panel" class="hide">
+				<div id="price"></div>
+				<div id="status"></div>
+			</div>
+			<label for="" id="logo">Loading...</label>
+			<img id="loading" src="./src/loading.svg" alt="" />
+			<div id="description" class="hide"></div>
+			<button id="pay-url" class="hide">Открыть страницу оплаты</button>
+			<div id="sucess" class="hide">
+				<span>Покажите код покупки на кассе в магазине.</span>
+				<br />
+				<span>Ваш код покупки:</span>
+				<span id="payCode"></span>
+			</div>
+		</div>
+		<script src="./main.js"></script>
+	</body>
+</html>

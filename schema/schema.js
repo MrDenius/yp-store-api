@@ -1,6 +1,8 @@
 const graphql = require("graphql");
+const crypto = require("crypto");
 
 const Position = require("../mongo-models/position");
+const PayInfo = require("../mongo-models/payInfo");
 
 const {
 	GraphQLObjectType,
@@ -17,24 +19,21 @@ const {
 const PositionType = new GraphQLObjectType({
 	name: "Position",
 	fields: () => ({
-		id: {
-			type: GraphQLID,
-		},
-		type: {
-			type: GraphQLString,
-		},
-		name: {
-			type: GraphQLString,
-		},
-		description: {
-			type: GraphQLString,
-		},
-		price: {
-			type: GraphQLFloat,
-		},
-		img: {
-			type: GraphQLString,
-		},
+		id: { type: GraphQLID },
+		type: { type: GraphQLString },
+		name: { type: GraphQLString },
+		description: { type: GraphQLString },
+		price: { type: GraphQLFloat },
+		img: { type: GraphQLString },
+	}),
+});
+
+const PayInfoType = new GraphQLObjectType({
+	name: "PayInfo",
+	fields: () => ({
+		payCode: { type: GraphQLString },
+		billId: { type: GraphQLString },
+		date: { type: GraphQLString },
 	}),
 });
 
@@ -44,9 +43,7 @@ const RootQuery = new GraphQLObjectType({
 		position: {
 			type: PositionType,
 			args: {
-				id: {
-					type: GraphQLID,
-				},
+				id: { type: GraphQLID },
 			},
 			resolve(parent, args) {
 				return Position.findById(args.id);
@@ -61,14 +58,42 @@ const RootQuery = new GraphQLObjectType({
 		positionsByType: {
 			type: new GraphQLList(PositionType),
 			args: {
-				type: {
-					type: GraphQLString,
-				},
+				type: { type: GraphQLString },
 			},
 			resolve(parent, args) {
 				return Position.find({
 					type: args.type,
 				});
+			},
+		},
+		PayInfoByBillId: {
+			type: PayInfoType,
+			args: {
+				billId: { type: new GraphQLNonNull(GraphQLString) },
+				date: { type: new GraphQLNonNull(GraphQLString) },
+			},
+			async resolve(parent, args) {
+				if (
+					(await PayInfo.count({
+						billId: args.billId,
+					})) != 0
+				) {
+					return PayInfo.findOne({
+						billId: args.billId,
+					});
+				} else {
+					if (!Number.isNaN(Number(args.date)))
+						args.date = Number(args.date);
+					const payinfo = new PayInfo({
+						payCode: crypto
+							.createHash("sha256")
+							.update(`${args.date}:${Math.random()}`)
+							.digest("hex"),
+						billId: args.billId,
+						date: new Date(args.date),
+					});
+					return payinfo.save();
+				}
 			},
 		},
 	},
@@ -80,21 +105,11 @@ const Mutation = new GraphQLObjectType({
 		addPosition: {
 			type: PositionType,
 			args: {
-				type: {
-					type: new GraphQLNonNull(GraphQLString),
-				},
-				name: {
-					type: new GraphQLNonNull(GraphQLString),
-				},
-				description: {
-					type: new GraphQLNonNull(GraphQLString),
-				},
-				price: {
-					type: new GraphQLNonNull(GraphQLFloat),
-				},
-				img: {
-					type: GraphQLString,
-				},
+				type: { type: new GraphQLNonNull(GraphQLString) },
+				name: { type: new GraphQLNonNull(GraphQLString) },
+				description: { type: new GraphQLNonNull(GraphQLString) },
+				price: { type: new GraphQLNonNull(GraphQLFloat) },
+				img: { type: GraphQLString },
 			},
 			resolve(parent, args) {
 				const position = new Position({

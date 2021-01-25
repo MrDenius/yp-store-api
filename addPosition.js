@@ -12,7 +12,7 @@ const Init = () => {
                 addPosition(type: "${body.type}", name: "${body.name}", description:"${body.description}", price:${body.price}, img:"${res.data.link}"){
                     id
                 }
-				}`.replace(/(([ \n])|#graphql)*/g, "");
+				}`;
 				console.log(query);
 				console.log(res);
 				console.log(`${global.address}graphql`);

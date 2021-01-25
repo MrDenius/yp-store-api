@@ -7,6 +7,7 @@ const Init = (secret) => {
 	const QiwiBillPaymentsAPI = require("@qiwi/bill-payments-node-js-sdk");
 	const qiwiApi = new QiwiBillPaymentsAPI(SECRET_KEY);
 	const crypto = require("crypto");
+	const fetch = require("node-fetch");
 
 	const api = (req, res) => {
 		const body = req.body;
@@ -17,8 +18,10 @@ const Init = (secret) => {
 				console.log({ body: body, query: query, req: req });
 				res.sendStatus(200);
 			}
+		} else if (query.check) {
+			StartCheck(query.check, res);
 		} else {
-			StartPay(query.price, res);
+			StartPay(query.price, res, query);
 		}
 	};
 
@@ -29,15 +32,70 @@ const Init = (secret) => {
 			.digest("hex");
 	};
 
-	const StartPay = (price, res) => {
+	const StartCheck = (billId, res) => {
+		qiwiApi
+			.getBillInfo(billId)
+			.then(async (data) => {
+				res.setHeader("Content-Type", "application/json");
+				if (data.status.value === "PAID") {
+					data.payInfo = await GetPayInfo(data.billId, res);
+				}
+				res.send(JSON.stringify(data));
+			})
+			.catch((err) => {
+				res.sendStatus(500);
+			});
+	};
+
+	const GetPayInfo = (billId, res) => {
+		return new Promise((resolve, reject) => {
+			qiwiApi.getBillInfo(billId).then((data) => {
+				if (data.status.value != "PAID") {
+					res.sendStatus(500);
+					return;
+				}
+
+				const query = `#graphql
+				{PayInfoByBillId(billId: "${data.billId}", date:"${new Date(
+					data.status.changedDateTime
+				).getTime()}"){
+						billId,date,payCode,
+					},}`.replace(/(([ \n])|#graphql)*/g, "");
+
+				fetch(`${global.address}graphql?query=${query}`)
+					.then((res) => {
+						res.json()
+							.then((data) => {
+								resolve(data.data.PayInfoByBillId);
+							})
+							.catch((err) => {
+								console.error(err);
+							});
+					})
+					.catch((err) => {
+						console.error(err);
+					});
+			});
+		});
+	};
+
+	const StartPay = (price, res, query) => {
 		const params = {
 			publicKey,
 			amount: price,
 			billId: GetBillId(),
+			currency: "RUB",
+			comment: query.comment,
 		};
 
-		const link = qiwiApi.createPaymentForm(params);
-		res.redirect(link);
+		qiwiApi
+			.createBill(params.billId, params)
+			.then((data) => {
+				res.redirect(`/?q=buy&bid=${params.billId}`);
+			})
+			.catch((err) => {
+				res.sendStatus(500);
+			});
 	};
 
 	return api;

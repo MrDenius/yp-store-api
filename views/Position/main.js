@@ -29,7 +29,10 @@ const init = async () => {
 	}
 };
 
-const StartPay = () => {};
+const StartPay = () => {
+	const comment = `${urlParams.get("name")}`;
+	location.href = `/pay?price=${urlParams.get("price")}&comment=${comment}`;
+};
 
 const Full = async () => {
 	document.body.innerHTML = await (await fetch("./full.html")).text();
@@ -38,8 +41,9 @@ const Full = async () => {
 	content.description = document.querySelector("#description");
 	content.price = document.querySelector("#price");
 	content.img = document.querySelector("#img");
+	content.buyButton = document.querySelector("#buy-button");
 
-	content.price.addEventListener("click", StartPay);
+	content.buyButton.addEventListener("click", StartPay);
 };
 
 const Small = async () => {
