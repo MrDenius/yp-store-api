@@ -7,14 +7,14 @@
 		"image-js": "^0.31.3",
 		"imgur": "^0.3.1",
 		"mongoose": "^5.11.12",
-		"node-fetch": "^2.6.1"
+		"node-fetch": "^2.6.1",
+		"cli": "^1.0.1"
 	},
 	"name": "yp-store-api",
 	"description": "",
 	"version": "1.0.0",
 	"main": "app.js",
 	"devDependencies": {
-		"cli": "^1.0.1",
 		"cross-env": "^7.0.3"
 	},
 	"scripts": {
