@@ -6,6 +6,7 @@ const Init = (secret) => {
 		"eyJ2ZXJzaW9uIjoiUDJQIiwiZGF0YSI6eyJwYXlpbl9tZXJjaGFudF9zaXRlX3VpZCI6InRpdDA4by0wMCIsInVzZXJfaWQiOiI3OTE0NjYyMTQxMSIsInNlY3JldCI6ImU4ZGEwNDgzMTMzYTM5OWQ0ZmFiNzQ4ZTJkYzIyN2ZhZGQ2MzFkMWNjZGFmMjU4Yjc2MWM0OTY3NWQxNjk0NTgifX0=";
 	const QiwiBillPaymentsAPI = require("@qiwi/bill-payments-node-js-sdk");
 	const qiwiApi = new QiwiBillPaymentsAPI(SECRET_KEY);
+	const crypto = require("crypto");
 
 	const api = (req, res) => {
 		const body = req.body;
@@ -21,12 +22,18 @@ const Init = (secret) => {
 		}
 	};
 
+	const GetBillId = () => {
+		return crypto
+			.createHash("sha256")
+			.update(Date.now().toString())
+			.digest("hex");
+	};
+
 	const StartPay = (price, res) => {
 		const params = {
 			publicKey,
 			amount: price,
-			billId: "891466214111",
-			successUrl: `${global.address}?secret=${secret}`,
+			billId: GetBillId(),
 		};
 
 		const link = qiwiApi.createPaymentForm(params);
