@@ -7,12 +7,20 @@ const Init = () => {
 		imgur
 			.uploadBase64(body.img)
 			.then((res) => {
-				const query = `#graphql
+				const query = decodeURI(
+					`#graphql
             mutation {
-                addPosition(type: "${body.type}", name: "${body.name}", description:"${body.description}", price:${body.price}, img:"${res.data.link}"){
+                addPosition(type: "${encodeURI(body.type)}", name: "${encodeURI(
+						body.name
+					)}", description:"${encodeURI(
+						body.description
+					)}", price:${encodeURI(body.price)}, img:"${encodeURI(
+						res.data.link
+					)}"){
                     id
                 }
-				}`;
+				}`.replace(/(([ \n])|#graphql)*/g, "")
+				);
 				console.log(query);
 				console.log(res);
 				console.log(`${global.address}graphql`);

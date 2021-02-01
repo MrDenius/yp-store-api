@@ -125,6 +125,15 @@ const Mutation = new GraphQLObjectType({
 				return position.save();
 			},
 		},
+		delPosition: {
+			type: PositionType,
+			args: {
+				id: { type: new GraphQLNonNull(GraphQLID) },
+			},
+			resolve(parent, args) {
+				return Position.deleteOne({ _id: args.id });
+			},
+		},
 	},
 });
 
