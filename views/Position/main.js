@@ -89,6 +89,12 @@ const Img = (url, content) => {
 	img.classList = "img";
 	content.appendChild(img);
 	content.classList = "img";
+
+	img.style.display = "none"
+	img.onload = () => {
+		img.style.display = "display"
+	}
+
 };
 
 init();

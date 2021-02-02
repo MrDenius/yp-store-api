@@ -42,7 +42,6 @@ const Tools = {
 				content.querySelector("#img").appendChild(img);
 
 				document.querySelector("#img-input").value = result;
-				document.querySelector("#sub").click();
 			});
 		});
 	},
