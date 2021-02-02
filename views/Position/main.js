@@ -85,16 +85,16 @@ const Img = (url, content) => {
 	if (content === "disable") return;
 	content = content || this.content;
 	const img = document.createElement("img");
-	img.src = url;
 	img.classList = "img";
 	content.appendChild(img);
 	content.classList = "img";
 
 	img.style.display = "none"
 	img.onload = () => {
-		img.style.display = "display"
+		img.style.display = "block"
 	}
 
+	img.src = url;
 };
 
 init();
